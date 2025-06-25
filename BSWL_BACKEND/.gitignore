@@ -1,0 +1,31 @@
+# Node.js
+node_modules/
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+*.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+/build/
+dist/
+
+# VSCode
+.vscode/
+
+# Coverage
+coverage/
+
+# Misc
+*.swp
+*.swo
+.idea/
+
+# Ignore all JSON credentials in config
+config/*.json

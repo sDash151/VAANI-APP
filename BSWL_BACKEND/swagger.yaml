@@ -1,0 +1,180 @@
+openapi: 3.0.1
+info:
+  title: Infosync API
+  description: API documentation for the Infosync backend (Sign Language Content & Quiz Platform)
+  version: 1.0.0
+  contact:
+    name: Sourav Dash Adhikari
+    email: sourav@example.com
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+
+tags:
+  - name: Content
+    description: Endpoints for managing learning content
+  - name: Video
+    description: Endpoints for video upload
+  - name: Quiz
+    description: Embedded in Content
+
+paths:
+  /content:
+    post:
+      tags: [Content]
+      summary: Create a new content entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentInput'
+      responses:
+        '201':
+          description: Content created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+
+    get:
+      tags: [Content]
+      summary: Get content by category and difficulty
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: difficulty
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of content
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+
+  /content/{id}:
+    put:
+      tags: [Content]
+      summary: Update content by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentInput'
+      responses:
+        '200':
+          description: Updated content
+    delete:
+      tags: [Content]
+      summary: Delete content by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted successfully
+
+  /upload-video/{contentId}:
+    post:
+      tags: [Video]
+      summary: Upload Hindi sign video to Firebase
+      parameters:
+        - in: path
+          name: contentId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Video uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  videoUrl:
+                    type: string
+
+components:
+  schemas:
+    Quiz:
+      type: object
+      properties:
+        question:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctIndex:
+          type: integer
+      required:
+        - question
+        - options
+        - correctIndex
+
+    ContentInput:
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          type: string
+          enum: [math, science, language]
+        difficulty:
+          type: integer
+        englishDescription:
+          type: string
+        quizzes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quiz'
+      required:
+        - title
+        - category
+        - englishDescription
+        - quizzes
+
+    Content:
+      allOf:
+        - $ref: '#/components/schemas/ContentInput'
+        - type: object
+          properties:
+            _id:
+              type: string
+            hindiSignVideo:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
