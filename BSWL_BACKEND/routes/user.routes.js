@@ -14,7 +14,6 @@ import {
 import { authenticate, authorize } from '../middlewares/auth.middleware.js';
 import { validate } from '../middlewares/validation.middleware.js';
 import { userSchemas } from '../middlewares/validation.middleware.js'; // or wherever it's defined
-import admin from 'firebase-admin';
 
 router.use(authenticate);
 
@@ -45,30 +44,6 @@ router.get('/profile', (req, res) => {
       { type: 'Pro', count: 5 },
     ],
   });
-});
-
-// Sync user from Firebase Auth to MongoDB
-router.post('/sync', async (req, res) => {
-  try {
-    const idToken = req.headers.authorization?.split(' ')[1];
-    if (!idToken) return res.status(401).json({ error: 'No token provided' });
-    const decoded = await admin.auth().verifyIdToken(idToken);
-    const { uid, email, fullName } = req.body;
-    if (uid !== decoded.uid) return res.status(403).json({ error: 'UID mismatch' });
-    // Find or create user in MongoDB
-    let user = await User.findOne({ uid });
-    if (!user) {
-      user = new User({ uid, email, fullName });
-      await user.save();
-    } else {
-      user.email = email;
-      user.fullName = fullName;
-      await user.save();
-    }
-    res.json({ success: true, user });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
 });
 
 // Admin-only routes

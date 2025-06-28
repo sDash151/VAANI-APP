@@ -20,12 +20,6 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-    select: false
-  },
   progress: {
     type: Map,
     of: Number, // Score for each lesson
@@ -47,11 +41,10 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   },
   lastLogin: Date,
-  refreshTokens: [String],
   uid: {
     type: String,
     unique: true,
-    sparse: true // Allows null for legacy users
+    required: true
   },
   fullName: {
     type: String,
@@ -65,8 +58,6 @@ const userSchema = new mongoose.Schema({
   toJSON: { 
     virtuals: true,
     transform: function(doc, ret) {
-      delete ret.password;
-      delete ret.refreshTokens;
       return ret;
     }
   }

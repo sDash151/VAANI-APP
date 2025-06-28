@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:flutter/rendering.dart';
 
 import 'package:provider/provider.dart';
@@ -13,10 +14,13 @@ import 'package:bswl_frontend_app/src/presentation/screens/auth/forgot_password.
 import 'package:bswl_frontend_app/src/presentation/screens/auth/reset_password_screen.dart';
 import 'package:bswl_frontend_app/src/presentation/screens/profile/edit_profile_screen.dart';
 import 'package:bswl_frontend_app/src/presentation/screens/profile/change_password_screen.dart';
+import 'package:bswl_frontend_app/utils/backend_test.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // ENSURE Flutter is ready
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(); // ✅ Initialize Firebase
+  await testBackendConnection(); // TEMP: Test backend connection at startup
   runApp(
     MultiProvider(
       providers: [

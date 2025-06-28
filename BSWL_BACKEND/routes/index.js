@@ -3,6 +3,7 @@ import authRoutes from './auth.routes.js';
 import contentRoutes from './content.routes.js';
 import translationRoutes from './translation.routes.js';
 import userRoutes from './user.routes.js';
+import healthRoutes from './health.routes.js';
 import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
@@ -16,15 +17,13 @@ const globalLimiter = rateLimit({
 
 router.use(globalLimiter);
 
+// Health check endpoint (should be before 404 handler)
+router.use('/health', healthRoutes);
+
 // API routes
 router.use('/auth', authRoutes);
 router.use('/content', contentRoutes);
 router.use('/translate', translationRoutes);
 router.use('/users', userRoutes);
-
-// Health check endpoint
-router.get('/health', (req, res) => {
-  res.status(200).json({ status: 'UP' });
-});
 
 export default router;

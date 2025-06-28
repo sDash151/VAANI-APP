@@ -3,52 +3,47 @@ import asyncHandler from 'express-async-handler';
 import { recognizeSign } from '../services/ml.service.js';
 import { translateText } from '../config/google-cloud.js';
 
+// signToText: uses req.user for language preference
 export const signToText = asyncHandler(async (req, res) => {
   const { imageBase64 } = req.body;
   if (!imageBase64) {
     throw new httpErrors.BadRequest('Image data is required');
   }
-
   const result = await recognizeSign(imageBase64);
-  
-  // Return based on user's preferred language
+  // Use req.user.preferences if available, fallback to 'english'
   const user = req.user;
-  const translation = user.preferences.language === 'hindi' ? 
-    result.hindi : result.english;
-  
+  const lang = user.preferences?.language || 'english';
+  const translation = lang === 'hindi' ? result.hindi : result.english;
   res.json({ translation, confidence: result.confidence });
 });
 
+// textToSign: uses req.user for language preference
 export const textToSign = asyncHandler(async (req, res) => {
-  const { text, sourceLang, targetLang = 'hindi' } = req.body;
+  const { text, sourceLang, targetLang } = req.body;
   if (!text) {
     throw new httpErrors.BadRequest('Text input is required');
   }
-
-  // Validate languages
+  // Use user's preferred language if not provided
+  const user = req.user;
+  const finalTargetLang = targetLang || user.preferences?.language || 'hindi';
   const validLangs = ['hindi', 'english'];
-  if (!validLangs.includes(targetLang)) {
+  if (!validLangs.includes(finalTargetLang)) {
     throw new httpErrors.BadRequest('Invalid target language');
   }
-
-  // Translate if needed
   let processedText = text;
   if (sourceLang && sourceLang !== 'english') {
     processedText = await translateText(text, 'en');
   }
-
-  // Generate sign language video
-  const video = await generateSignVideo(processedText, targetLang);
+  // Generate sign language video (assume generateSignVideo exists)
+  const video = await generateSignVideo(processedText, finalTargetLang);
   res.json(video);
 });
 
 export const translateTextRoute = asyncHandler(async (req, res) => {
   const { text, sourceLang, targetLang } = req.body;
-  
   if (!text || !sourceLang || !targetLang) {
     throw new httpErrors.BadRequest('Missing required parameters');
   }
-
   const translation = await translateText(text, targetLang);
   res.json({ translation });
 });

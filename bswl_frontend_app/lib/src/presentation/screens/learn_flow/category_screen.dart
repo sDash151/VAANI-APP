@@ -1,5 +1,6 @@
 // lib/src/presentation/screens/learn_flow/category_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/page_header.dart';
 import './lesson_detail_screen.dart';
@@ -36,7 +37,12 @@ class CategoryScreen extends StatelessWidget {
       },
     ];
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Scaffold(
+      backgroundColor: colorScheme.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -49,13 +55,51 @@ class CategoryScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Expanded(
-                child: ListView.separated(
+                child: GridView.builder(
                   itemCount: modules.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) => _buildModuleCard(
-                    context: context,
-                    module: modules[index],
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1,
                   ),
+                  itemBuilder: (context, index) {
+                    return Animate(
+                      effects: [
+                        FadeEffect(duration: 500.ms, delay: (index * 80).ms),
+                        SlideEffect(
+                            duration: 500.ms,
+                            delay: (index * 80).ms,
+                            begin: const Offset(0, 0.1)),
+                      ],
+                      child: _ModuleGridItem(
+                        title: modules[index]['title'],
+                        description: modules[index]['description'],
+                        duration: modules[index]['duration'],
+                        onLessonTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LessonDetailPage(
+                                lessonTitle: modules[index]['title'],
+                                subjectName: subjectName,
+                              ),
+                            ),
+                          );
+                        },
+                        onQuizTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizPage(
+                                lessonTitle: modules[index]['title'],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -64,106 +108,109 @@ class CategoryScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildModuleCard({
-    required BuildContext context,
-    required Map<String, dynamic> module,
-  }) {
+class _ModuleGridItem extends StatelessWidget {
+  final String title;
+  final String description;
+  final String duration;
+  final VoidCallback? onLessonTap;
+  final VoidCallback? onQuizTap;
+
+  const _ModuleGridItem({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.duration,
+    this.onLessonTap,
+    this.onQuizTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     return Container(
-      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppColors.card, // fixed from cardBackground
-        borderRadius: BorderRadius.circular(20),
+        color: colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
+            color: colorScheme.shadow.withOpacity(0.08),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                width: 60,
-                height: 60,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
+                  color: colorScheme.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.play_circle_fill, 
-                    color: AppColors.primary, size: 36),
+                child: Icon(Icons.play_circle_fill,
+                    color: colorScheme.onPrimary, size: 32),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      module['title'],
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
+                      title,
+                      style: textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      module['description'],
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                      description,
+                      style: textTheme.bodyMedium?.copyWith(
+                          color:
+                              colorScheme.onPrimaryContainer.withOpacity(0.7)),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const Spacer(),
           Row(
             children: [
               Chip(
-                backgroundColor: AppColors.primaryLight,
+                backgroundColor: colorScheme.secondaryContainer,
                 label: Text(
-                  module['duration'],
-                  style: const TextStyle(color: AppColors.primary),
+                  duration,
+                  style: textTheme.labelMedium
+                      ?.copyWith(color: colorScheme.onSecondaryContainer),
                 ),
               ),
               const Spacer(),
               IconButton(
-                icon: const Icon(Icons.play_circle_fill, 
-                    color: AppColors.primary),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LessonDetailPage(
-                        lessonTitle: module['title'],
-                        subjectName: subjectName,
-                      ),
-                    ),
-                  );
-                },
+                icon: Icon(Icons.play_circle_fill, color: colorScheme.primary),
+                onPressed: onLessonTap,
+                tooltip: 'Start Lesson',
               ),
               const SizedBox(width: 8),
               TextButton.icon(
-                icon: const Icon(Icons.quiz, color: AppColors.accent),
-                label: const Text(
+                icon: Icon(Icons.quiz, color: colorScheme.secondary),
+                label: Text(
                   "Quiz",
-                  style: TextStyle(color: AppColors.accent),
+                  style: textTheme.labelLarge
+                      ?.copyWith(color: colorScheme.secondary),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => QuizPage(
-                        lessonTitle: module['title'],
-                      ),
-                    ),
-                  );
-                },
+                onPressed: onQuizTap,
               ),
             ],
           ),

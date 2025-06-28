@@ -1,4 +1,6 @@
 import express from 'express';
+import { authenticate } from '../middlewares/auth.middleware.js';
+
 const router = express.Router();
 
 // Dummy data for demonstration
@@ -9,6 +11,9 @@ const subjects = [
   { name: 'Science', icon: 'science' },
   { name: 'Hindi', icon: 'book' },
 ];
+
+// Require authentication for all endpoints in this router
+router.use(authenticate);
 
 router.get('/subjects', (req, res) => {
   res.json({ subjects });

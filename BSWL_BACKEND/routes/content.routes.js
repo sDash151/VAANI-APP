@@ -7,7 +7,7 @@ import {
   uploadVideo
 } from '../controllers/content.controller.js';
 import { validate, contentSchemas } from '../middlewares/validation.middleware.js';
-import { authenticate, authorize, handleTokenRefresh } from '../middlewares/auth.middleware.js';
+import { authenticate, authorize } from '../middlewares/auth.middleware.js';
 import upload from '../services/storage.service.js';
 
 const router = express.Router();

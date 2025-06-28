@@ -87,19 +87,19 @@ class ProgressPage extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: SubjectProgressCard(
                           subject: [
-                            "English",
-                            "Maths",
-                            "Science",
-                            "Social",
-                            "Hindi"
+                            "Elementary",
+                            "Intermediate",
+                            "Conversation",
+                            "Morals",
+                            "Science"
                           ][index],
                           progress: [0.8, 0.6, 0.7, 0.5, 0.9][index],
                           icon: [
-                            Icons.language,
-                            Icons.calculate,
-                            Icons.science,
-                            Icons.public,
-                            Icons.translate
+                            Icons.school, // Elementary
+                            Icons.auto_stories, // Intermediate
+                            Icons.forum, // Conversation
+                            Icons.volunteer_activism, // Morals
+                            Icons.science // Science
                           ][index],
                         ),
                       ),

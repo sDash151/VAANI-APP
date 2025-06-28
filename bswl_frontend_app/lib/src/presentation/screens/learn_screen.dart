@@ -3,12 +3,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:bswl_frontend_app/src/presentation/theme/app_colors.dart';
 import 'package:bswl_frontend_app/src/presentation/theme/text_styles.dart';
 import 'package:bswl_frontend_app/src/presentation/widgets/learn_header.dart';
-import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/subject_screen.dart';
-import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/mathematics_screen.dart';
-import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/english_screen.dart';
-import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/science_screen.dart';
-import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/social_studies_screen.dart';
-import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/hindi_screen.dart';
+import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/elementary_screen.dart';
+import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/intermediate_screen.dart';
+import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/conversation_screen.dart';
+import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/morals_screen.dart';
+import 'package:bswl_frontend_app/src/presentation/screens/learn_flow/Advanced_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LearnScreen extends StatelessWidget {
@@ -17,11 +16,11 @@ class LearnScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final subjects = [
-      {'name': 'English', 'icon': Icons.font_download},
-      {'name': 'Mathematics', 'icon': Icons.calculate},
-      {'name': 'Social Studies', 'icon': Icons.group},
-      {'name': 'Science', 'icon': Icons.science},
-      {'name': 'Hindi', 'icon': Icons.book},
+      {'name': 'Elementary', 'icon': Icons.school},
+      {'name': 'Intermediate', 'icon': Icons.auto_stories},
+      {'name': 'Conversation', 'icon': Icons.forum},
+      {'name': 'Morals', 'icon': Icons.volunteer_activism},
+      {'name': 'Advanced', 'icon': Icons.rocket_launch},
     ];
 
     return Scaffold(
@@ -95,7 +94,7 @@ class LearnScreen extends StatelessWidget {
                     itemCount: subjects.length,
                     itemBuilder: (context, index) {
                       final subject = subjects[index];
-                      if (subject['name'] == 'Mathematics') {
+                      if (subject['name'] == 'Elementary') {
                         return SubjectCard(
                           subjectName: subject['name'] as String,
                           icon: subject['icon'] as IconData,
@@ -103,7 +102,7 @@ class LearnScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MathematicsScreen(),
+                                builder: (context) => ElementaryScreen(),
                               ),
                             );
                           },
@@ -111,7 +110,7 @@ class LearnScreen extends StatelessWidget {
                             .animate()
                             .fadeIn(duration: 400.ms, delay: (index * 100).ms)
                             .slideY(begin: 0.2);
-                      } else if (subject['name'] == 'English') {
+                      } else if (subject['name'] == 'Intermediate') {
                         return SubjectCard(
                           subjectName: subject['name'] as String,
                           icon: subject['icon'] as IconData,
@@ -119,7 +118,7 @@ class LearnScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EnglishScreen(),
+                                builder: (context) => IntermediateScreen(),
                               ),
                             );
                           },
@@ -127,7 +126,7 @@ class LearnScreen extends StatelessWidget {
                             .animate()
                             .fadeIn(duration: 400.ms, delay: (index * 100).ms)
                             .slideY(begin: 0.2);
-                      } else if (subject['name'] == 'Science') {
+                      } else if (subject['name'] == 'Conversation') {
                         return SubjectCard(
                           subjectName: subject['name'] as String,
                           icon: subject['icon'] as IconData,
@@ -135,7 +134,7 @@ class LearnScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ScienceScreen(),
+                                builder: (context) => ConversationScreen(),
                               ),
                             );
                           },
@@ -143,7 +142,7 @@ class LearnScreen extends StatelessWidget {
                             .animate()
                             .fadeIn(duration: 400.ms, delay: (index * 100).ms)
                             .slideY(begin: 0.2);
-                      } else if (subject['name'] == 'Social Studies') {
+                      } else if (subject['name'] == 'Morals') {
                         return SubjectCard(
                           subjectName: subject['name'] as String,
                           icon: subject['icon'] as IconData,
@@ -151,7 +150,7 @@ class LearnScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SocialStudiesScreen(),
+                                builder: (context) => MoralsScreen(),
                               ),
                             );
                           },
@@ -159,7 +158,7 @@ class LearnScreen extends StatelessWidget {
                             .animate()
                             .fadeIn(duration: 400.ms, delay: (index * 100).ms)
                             .slideY(begin: 0.2);
-                      } else if (subject['name'] == 'Hindi') {
+                      } else if (subject['name'] == 'Advanced') {
                         return SubjectCard(
                           subjectName: subject['name'] as String,
                           icon: subject['icon'] as IconData,
@@ -167,26 +166,7 @@ class LearnScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HindiScreen(),
-                              ),
-                            );
-                          },
-                        )
-                            .animate()
-                            .fadeIn(duration: 400.ms, delay: (index * 100).ms)
-                            .slideY(begin: 0.2);
-                      } else {
-                        return SubjectCard(
-                          subjectName: subject['name'] as String,
-                          icon: subject['icon'] as IconData,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SubjectPage(
-                                  subjectName: subject['name'] as String,
-                                  subjectIcon: '', // Pass icon if needed
-                                ),
+                                builder: (context) => AdvancedScreen(),
                               ),
                             );
                           },
@@ -195,6 +175,8 @@ class LearnScreen extends StatelessWidget {
                             .fadeIn(duration: 400.ms, delay: (index * 100).ms)
                             .slideY(begin: 0.2);
                       }
+                      // Defensive: Should never reach here, but return a SizedBox if so
+                      return const SizedBox.shrink();
                     },
                   ),
                 ),
@@ -286,7 +268,7 @@ class _SubjectCardState extends State<SubjectCard> {
               Text(
                 widget.subjectName,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontFamily:'Poppins',
+                  fontFamily: 'Poppins',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.5,

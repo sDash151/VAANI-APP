@@ -7,6 +7,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
 
   ## ── Firebase core & Auth ─────────────────────────────────────────────────
   firebase_core: ^3.13.1
@@ -58,6 +59,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/animations/
     - assets/images/
     - assets/fonts/
