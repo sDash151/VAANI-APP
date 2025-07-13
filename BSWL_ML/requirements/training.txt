@@ -1,0 +1,9 @@
+torch==2.2.1
+torchvision==0.17.1
+torchaudio==2.2.1
+pytorch-lightning==2.2.1
+scikit-learn==1.4.1.post1
+matplotlib==3.8.3
+pandas==2.2.1
+tensorboard==2.16.2
+onnx==1.15.0

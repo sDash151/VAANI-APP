@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+.env
+.venv/
+venv/
+env/
+
+# Data
+*.npy
+*.mp4
+*.avi
+*.csv
+*.pth
+*.pt
+*.onnx
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Notebooks
+*.ipynb_checkpoints
+
+# Docker
+docker-compose.override.yml
+
+# Kubernetes
+kustomization.yaml

@@ -1,0 +1,33 @@
+# Ignore all files by default
+*
+
+# Allow specific files and directories
+!app/**
+!deployment/**
+!requirements/**
+!models/
+
+# Exceptions
+.git
+.gitignore
+README.md
+Dockerfile
+docker-compose.yml
+
+# Exclude large files
+*.mp4
+*.avi
+*.mov
+*.zip
+*.tar
+*.gz
+
+# Exclude development artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+env/
+venv/

@@ -1,0 +1,46 @@
+# deployment/k8s/gpu-monitoring.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nvidia-gpu-exporter
+  labels:
+    app: nvidia-gpu-exporter
+spec:
+  selector:
+    app: nvidia-gpu-exporter
+  ports:
+  - port: 9835
+    name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nvidia-gpu-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nvidia-gpu-exporter
+  template:
+    metadata:
+      labels:
+        app: nvidia-gpu-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9835"
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-t4
+      containers:
+      - name: nvidia-gpu-exporter
+        image: nvcr.io/nvidia/k8s/dcgm-exporter:3.3.2-3.1.5-ubuntu22.04
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+        securityContext:
+          runAsUser: 0
+        env:
+        - name: DCGM_EXPORTER_LISTEN
+          value: ":9835"
+        ports:
+        - containerPort: 9835

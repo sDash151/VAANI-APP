@@ -1,0 +1,72 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: ml-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "ml-api.example.com"
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: ml-tls-cert
+    hosts:
+    - "ml-api.example.com"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ml-service-vs
+spec:
+  hosts:
+  - "ml-api.example.com"
+  gateways:
+  - ml-gateway
+  http:
+  - name: "ml-api"
+    route:
+    - destination:
+        host: isl-ml-service
+        port:
+          number: 8000
+    timeout: 30s
+    retries:
+      attempts: 3
+      perTryTimeout: 10s
+      retryOn: gateway-error,connect-failure,refused-stream
+    corsPolicy:
+      allowOrigins:
+      - "*"
+      allowMethods:
+      - GET
+      - POST
+      - OPTIONS
+      allowHeaders:
+      - "*"
+    headers:
+      request:
+        set:
+          X-Request-Start: "t=%START_TIME(%s.%3f)%"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ml-tls-cert
+spec:
+  secretName: ml-tls-cert
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - ml-api.example.com

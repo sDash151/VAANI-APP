@@ -1,0 +1,192 @@
+CURRENT STATUS OF PROJECT:-
+Project Master Document: VAANI-BSWL Sign Language Learning Platform
+1. Project Overview
+Project Name: VAANI-BSWL (Bridging Silence With Learning)
+Type: Full-stack, cross-platform sign language learning application
+Tech Stack:
+
+Frontend: Flutter (Dart)
+Backend: Node.js (Express)
+ML Service: Python (assumed, for sign/video processing)
+Cloud: Google Cloud, Firebase
+Deployment: Kubernetes, Terraform
+2. Purpose
+The BSWL platform aims to make Indian Sign Language (ISL) and general sign language learning accessible, interactive, and modern for all ages. It provides structured lessons, video content, and interactive modules for users to learn sign language, including ISL history, English, Political Science, Environmental Science, Mathematics, and more.
+
+3. Key Features & Functionality
+3.1. User-Facing Features
+Modular Learning Flow:
+
+Categories: Elementary, Intermediate, Advanced, Conversation, Morals, and more.
+Each category contains subtopics (e.g., Alphabets, Numbers, Grammar, etc.).
+Each subtopic contains animated, theme-based video lesson cards.
+Video Lessons:
+
+Each lesson card can navigate to a placeholder or real video player.
+Lessons are grouped by topic/part for clarity.
+Modern UI/UX:
+
+Consistent use of theme-based colors, fonts, and gradients.
+Cupertino-style (iOS-like) transitions for smooth navigation.
+Animated cards and headers for engaging experience.
+Profile & Progress:
+
+(Assumed) User profile and progress tracking.
+3.2. Backend & Services
+Authentication:
+
+User authentication via Firebase and/or custom backend.
+Content Management:
+
+REST APIs for managing lessons, users, and logs.
+ML Integration:
+
+(Assumed) ML service for sign/video recognition.
+Cloud Storage:
+
+Google Cloud Storage for video assets.
+Logging & Monitoring:
+
+Application and error logs.
+3.3. Deployment
+Kubernetes:
+Backend, frontend, and ML services are containerized and orchestrated.
+Terraform:
+Infrastructure as code for cloud resources.
+4. Theming & Design
+Color Scheme:
+
+Light, modern palette with blue gradients (e.g., Color(0xFFE3F0FF), Color(0xFFF8FBFF)).
+Theme-based color and font usage throughout.
+Typography:
+
+Google Fonts (Montserrat, Poppins).
+Consistent use of titleMedium, titleLarge, etc.
+UI Components:
+
+SubjectCard: For categories/subjects.
+VideoLessonCard: For individual lessons.
+PageHeader: For consistent screen headers.
+Animated transitions and fade/slide effects.
+5. Folder Structure (Key Parts)
+BSWL_BACKEND/
+  app.js
+  package.json
+  seedUser.js
+  server.js
+  swagger.yaml
+  config/
+    bswl-bc647-*.json      # Service account (should be gitignored)
+    database.js
+    firebase.js
+    google-cloud.js
+  controllers/
+    auth.controller.js
+    content.controller.js
+    translation.controller.js
+    user.controller.js
+  logs/
+    application-*.log
+    error.log
+    exceptions.log
+  middlewares/
+    auth.middleware.js
+    error.middleware.js
+    validation.middleware.js
+  models/
+    content.model.js
+    log.model.js
+    user.model.js
+  routes/
+    auth.routes.js
+    content.routes.js
+    index.js
+    learn.routes.js
+    translation.routes.js
+    user.routes.js
+  services/
+    auth.service.js
+    content.service.js
+    google.service.js
+    ml.service.js
+    storage.service.js
+    translation.service.js
+  utils/
+    apiError.js
+    asyncHandler.js
+    logger.js
+    responseHandler.js
+    validators/
+
+BSWL_DEPLOYMENT/
+  kubernetes/
+    backend/
+    frontend/
+    ml-service/
+  scripts/
+  terraform/
+    modules/
+
+bswl_frontend_app/
+  analysis_options.yaml
+  pubspec.yaml
+  android/
+  ios/
+  lib/
+    src/
+      presentation/
+        screens/
+          learn_flow/
+            elementary_screen.dart
+            intermediate_screen.dart
+            conversation_screen.dart
+            morals_screen.dart
+            Advanced_screen.dart
+            english_lessons_screen.dart
+            isl_history_lessons_screen.dart
+            political_science_lessons_screen.dart
+            environmental_science_lessons_screen.dart
+            mathematics_lessons_screen.dart
+            alphabets_lessons_screen.dart
+            learn_screen.dart
+          profile_screen.dart
+        widgets/
+          subject_card.dart
+          video_lesson_card.dart
+          page_header.dart
+      theme/
+        app_colors.dart
+        text_styles.dart
+  test/
+  assets/
+    animations/
+    fonts/
+    images/
+  build/
+  ...
+6. Security & Best Practices
+All sensitive credentials (e.g., config/*.json) are gitignored.
+Never commit private keys or service accounts to version control.
+Use environment variables for secrets in production.
+7. How to Extend
+Add new subjects or lessons by creating new screens and updating navigation.
+Connect real video URLs to lesson cards.
+Implement real video player screens.
+Add user progress tracking and gamification.
+8. Getting Started
+Frontend:
+Flutter: cd bswl_frontend_app && flutter pub get && flutter run
+Backend:
+Node.js: cd BSWL_BACKEND && npm install && npm start
+Deployment:
+Use Kubernetes manifests and Terraform scripts in BSWL_DEPLOYMENT.
+9. Current UI/UX Patterns
+All subject and lesson screens use modular, animated cards and consistent headers.
+Navigation is handled with Cupertino-style transitions for a native feel.
+All colors and fonts are theme-based for easy customization.
+10. Notes for Developers/AI
+The project is modular and easy to extend.
+All UI logic is separated into widgets for reusability.
+Backend is RESTful and ready for integration with ML and cloud services.
+Sensitive files are protected via .gitignore.
+If you need further details on any specific module, screen, or integration, let me know!

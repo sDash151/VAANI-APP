@@ -1,0 +1,19 @@
+model_path: "models/isl_model.onnx"
+execution_provider: "auto"
+sequence_length: 30
+sequence_overlap: 5
+frame_width: 640
+frame_height: 480
+max_video_size: 52428800  # 50MB
+log_level: "INFO"
+gpu_threshold: 0.8
+num_classes: 50
+input_size: 675  # 75 landmarks * 3 coordinates * 3 (pose, left, right)
+label_mappings:
+  "0":
+    en: "Hello"
+    hi: "नमस्ते"
+  "1":
+    en: "Thank You"
+    hi: "धन्यवाद"
+  # ... (all other classes)
