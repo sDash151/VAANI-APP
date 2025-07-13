@@ -1,2 +1,32 @@
-# Ignore all .mp4 files
+# Node
+node_modules/
+.env
+npm-debug.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.pkl
+*.npy
+*.pt
+*.onnx
+
+# Flutter
+build/
+*.lock
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Git LFS big files
 *.mp4
+*.mov
+*.avi
+*.mkv
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
