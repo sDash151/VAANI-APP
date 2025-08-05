@@ -12,16 +12,40 @@ import shutil
 
 router = APIRouter()
 
-video_processor = VideoProcessor(settings)
-model_loader = ModelLoader(
-    model_path=settings.model_path,
-    execution_provider=settings.execution_provider
-)
-translator = TranslationMapper(settings.label_mappings)
+# Lazy loading - don't instantiate at import time
+_video_processor = None
+_model_loader = None
+_translator = None
+
+def get_video_processor():
+    global _video_processor
+    if _video_processor is None:
+        _video_processor = VideoProcessor(settings)
+    return _video_processor
+
+def get_model_loader():
+    global _model_loader
+    if _model_loader is None:
+        _model_loader = ModelLoader(
+            model_path=settings.model_path,
+            execution_provider=settings.execution_provider
+        )
+    return _model_loader
+
+def get_translator():
+    global _translator
+    if _translator is None:
+        _translator = TranslationMapper(settings.label_mappings)
+    return _translator
 
 @router.post("/predict/video", response_model=TranslationResponse)
 async def predict_video(file: UploadFile = File(...)):
     try:
+        # Get instances when needed
+        video_processor = get_video_processor()
+        model_loader = get_model_loader()
+        translator = get_translator()
+        
         # Stream processing to avoid large memory usage
         with NamedTemporaryFile(delete=True) as temp_video:
             shutil.copyfileobj(file.file, temp_video)

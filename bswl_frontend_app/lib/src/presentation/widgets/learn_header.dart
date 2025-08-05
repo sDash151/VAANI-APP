@@ -34,29 +34,29 @@ class LearnHeader extends StatelessWidget {
                   Text(
                     'Learn Sign Language',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontSize: 30,
-                    color: const Color.fromARGB(255, 253, 252, 252),
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                    const Shadow(
-                    offset: Offset(1.5, 1.5),
-                    blurRadius: 3.0,
-                    color: Colors.black26,
+                      fontSize: 30,
+                      color: const Color.fromARGB(255, 253, 252, 252),
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        const Shadow(
+                          offset: Offset(1.5, 1.5),
+                          blurRadius: 3.0,
+                          color: Colors.black26,
+                        ),
+                      ],
                     ),
-                  ],
-                 ),
-            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2),
-
-
+                  ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2),
                   const SizedBox(height: 8),
-
                   Text(
                     'Choose a subject to get started',
                     style: TextStyles.textTheme.bodyLarge?.copyWith(
                       fontSize: 19,
                       color: Colors.white70,
                     ),
-                  ).animate(delay: 200.ms).fadeIn(duration: 600.ms).slideY(begin: 0.4),
+                  )
+                      .animate(delay: 200.ms)
+                      .fadeIn(duration: 600.ms)
+                      .slideY(begin: 0.4),
                 ],
               ),
 

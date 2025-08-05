@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bswl_frontend_app/services/api_service.dart';
+import 'package:bswl_frontend_app/config/app_config.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String token;
@@ -32,7 +33,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       _successMessage = null;
     });
     try {
-      final api = ApiService(baseUrl: 'http://localhost:3000/api');
+      final api = ApiService(
+        baseUrl: AppConfig.apiBaseUrl,
+        mlServiceUrl: AppConfig.mlServiceUrl,
+      );
       await api.post('auth/reset-password', {
         'token': widget.token,
         'newPassword': _passwordController.text.trim(),

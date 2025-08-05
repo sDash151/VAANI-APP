@@ -22,7 +22,10 @@ class _SubjectCardState extends State<SubjectCard> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
+
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) => setState(() => _isPressed = false),
@@ -33,7 +36,7 @@ class _SubjectCardState extends State<SubjectCard> {
         duration: const Duration(milliseconds: 120),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
               colors: [
                 Colors.white.withOpacity(0.9),
@@ -52,12 +55,15 @@ class _SubjectCardState extends State<SubjectCard> {
             ],
             border: Border.all(color: Colors.grey.shade200, width: 1),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.03,
+            vertical: screenHeight * 0.015,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(screenWidth * 0.03),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
@@ -71,21 +77,25 @@ class _SubjectCardState extends State<SubjectCard> {
                 ),
                 child: Icon(
                   widget.icon,
-                  size: 36,
+                  size: screenWidth * 0.08, // Responsive icon size
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 18),
-              Text(
-                widget.subjectName,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontFamily: 'Poppins',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
-                  color: AppColors.textPrimary,
+              SizedBox(height: screenHeight * 0.012),
+              Flexible(
+                child: Text(
+                  widget.subjectName,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontFamily: 'Poppins',
+                    fontSize: screenWidth * 0.04, // Responsive font size
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                    color: AppColors.textPrimary,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 ),
-                textAlign: TextAlign.center,
               ),
             ],
           ),

@@ -4,6 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/subject_card.dart';
 import 'alphabets_lessons_screen.dart'; // Import the Alphabets lessons screen
+import 'generic_lesson_screen.dart'; // Import the generic lesson screen
+import '../../../services/video_asset_service.dart'; // Import video asset service
 
 class ElementaryScreen extends StatelessWidget {
   ElementaryScreen({Key? key}) : super(key: key);
@@ -29,8 +31,11 @@ class ElementaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -45,8 +50,10 @@ class ElementaryScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.04,
+              vertical: screenHeight * 0.01,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -54,16 +61,19 @@ class ElementaryScreen extends StatelessWidget {
                   title: 'Elementary Categories',
                   onBackPressed: () => Navigator.pop(context),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: screenHeight * 0.015),
                 Expanded(
                   child: GridView.builder(
-                    padding: const EdgeInsets.only(bottom: 12, top: 4),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    padding: EdgeInsets.only(
+                      bottom: screenHeight * 0.02,
+                      top: screenHeight * 0.005,
+                    ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.85,
+                      crossAxisSpacing: screenWidth * 0.04,
+                      mainAxisSpacing: screenHeight * 0.015,
+                      childAspectRatio:
+                          1.1, // Increased aspect ratio to prevent overflow
                     ),
                     itemCount: categories.length,
                     itemBuilder: (context, index) {
@@ -72,13 +82,40 @@ class ElementaryScreen extends StatelessWidget {
                         subjectName: subject['title'],
                         icon: subject['icon'],
                         onTap: () {
-                          if (subject['title'] == 'Alphabets') {
+                          final categoryTitle = subject['title'];
+                          final categoryKey = categoryTitle.toLowerCase();
+
+                          // Check if we have video content for this category
+                          final availableLessons =
+                              VideoAssetService.getLessonTitlesForCategory(
+                                  categoryKey);
+
+                          if (categoryTitle == 'Alphabets') {
                             Navigator.push(
                               context,
                               _cupertinoRoute(AlphabetsLessonsScreen()),
                             );
+                          } else if (availableLessons.isNotEmpty) {
+                            // Use generic lesson screen for categories with videos
+                            Navigator.push(
+                              context,
+                              _cupertinoRoute(
+                                GenericLessonScreen(
+                                  categoryTitle: categoryTitle,
+                                  categoryKey: categoryKey,
+                                  lessons: availableLessons,
+                                ),
+                              ),
+                            );
                           } else {
-                            // TODO: Add navigation for other categories if needed
+                            // Show placeholder for categories without videos
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Videos for $categoryTitle are coming soon!'),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
                           }
                         },
                       )
@@ -95,22 +132,23 @@ class ElementaryScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-// Helper for Cupertino-style page transition
-Route _cupertinoRoute(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.easeInOut;
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-    transitionDuration: const Duration(milliseconds: 350),
-  );
+  // Helper for Cupertino-style page transition
+  Route _cupertinoRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 350),
+    );
+  }
 }

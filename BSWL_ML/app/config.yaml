@@ -1,19 +1,96 @@
-model_path: "models/isl_model.onnx"
+# ─── MODEL & EXECUTION ─────────────────────────────────────
+model_path: "models/isl_video_best.pt"
 execution_provider: "auto"
-sequence_length: 30
+sequence_length: 160           # Each video preprocessed to 160 frames
 sequence_overlap: 5
 frame_width: 640
 frame_height: 480
-max_video_size: 52428800  # 50MB
-log_level: "INFO"
+max_video_size: 52428800       # 50MB
+input_size: 1662               # From trained model
+num_classes: 41
 gpu_threshold: 0.8
-num_classes: 50
-input_size: 675  # 75 landmarks * 3 coordinates * 3 (pose, left, right)
+log_level: "INFO"
+
+# ─── DATA PATHS ─────────────────────────────────────────────
+train_data_path: "E:/ALL PROJECTS/FINAL_YEAR_PROJECT_BACKUP/ASSETS/ISL_PROCESSED_VIDEO_SPLIT/train"
+val_data_path: "E:/ALL PROJECTS/FINAL_YEAR_PROJECT_BACKUP/ASSETS/ISL_PROCESSED_VIDEO_SPLIT/val"
+
+# ─── TRAINING HYPERPARAMETERS ──────────────────────────────
+batch_size: 32
+epochs: 50
+learning_rate: 0.0001
+hidden_dim: 128
+dropout_p: 0.3
+seed: 42
+
+# ─── PATHS FOR CHECKPOINTS, LOGGING, EXPORT ────────────────
+checkpoint_dir: "checkpoints"
+model_save_path: "models/isl_video_best.pt"
+torchscript_path: "models/isl_video_best.pt.ts"
+tensorboard: true
+tensorboard_log_dir: "logs/tensorboard"
+log_dir: "logs"
+
+
 label_mappings:
-  "0":
-    en: "Hello"
-    hi: "नमस्ते"
-  "1":
-    en: "Thank You"
-    hi: "धन्यवाद"
-  # ... (all other classes)
+  "0": { en: "Bear", hi: "भालू" }
+  "1": { en: "Break", hi: "विराम" }
+  "2": { en: "Brinjal", hi: "बैंगन" }
+  "3": { en: "Budget", hi: "बजट" }
+  "4": { en: "Busy", hi: "व्यस्त" }
+  "5": { en: "Cabbage", hi: "पत्ता गोभी" }
+  "6": { en: "Carrot", hi: "गाजर" }
+  "7": { en: "Cauliflower", hi: "फूलगोभी" }
+  "8": { en: "Chilli", hi: "मिर्च" }
+  "9": { en: "Clean", hi: "साफ़" }
+  "10": { en: "Close", hi: "बंद" }
+  "11": { en: "Come", hi: "आओ" }
+  "12": { en: "Cook", hi: "पकाना" }
+  "13": { en: "Crocodile", hi: "मगरमच्छ" }
+  "14": { en: "Cry", hi: "रोना" }
+  "15": { en: "Cucumber", hi: "खीरा" }
+  "16": { en: "Deer", hi: "हिरण" }
+  "17": { en: "Drink", hi: "पीना" }
+  "18": { en: "Elephant", hi: "हाथी" }
+  "19": { en: "Exam", hi: "परीक्षा" }
+  "20": { en: "Fedup", hi: "थक गया" }
+  "21": { en: "Fever", hi: "बुखार" }
+  "22": { en: "Giraffe", hi: "जिराफ़" }
+  "23": { en: "Give", hi: "देना" }
+  "24": { en: "Good afternoon", hi: "शुभ अपराह्न" }
+  "25": { en: "Good Morning", hi: "सुप्रभात" }
+  "26": { en: "Hello", hi: "नमस्ते" }
+  "27": { en: "Hug", hi: "गले लगाना" }
+  "28": { en: "Injury", hi: "चोट" }
+  "29": { en: "Interview", hi: "साक्षात्कार" }
+  "30": { en: "Jump", hi: "कूदना" }
+  "31": { en: "Karnataka", hi: "कर्नाटक" }
+  "32": { en: "Key", hi: "चाबी" }
+  "33": { en: "Knife", hi: "चाकू" }
+  "34": { en: "Lemon", hi: "नींबू" }
+  "35": { en: "Lion", hi: "सिंह" }
+  "36": { en: "Man", hi: "आदमी" }
+  "37": { en: "Maths", hi: "गणित" }
+  "38": { en: "Maybe", hi: "शायद" }
+  "39": { en: "Monkey", hi: "बंदर" }
+  "40": { en: "Onion", hi: "प्याज" }
+  "41": { en: "Peacock", hi: "मोर" }
+  "42": { en: "Pigeon", hi: "कबूतर" }
+  "43": { en: "Pour", hi: "उड़ेलना" }
+  "44": { en: "Radish", hi: "मूली" }
+  "45": { en: "Sparrow", hi: "गौरैया" }
+  "46": { en: "Still", hi: "अब भी" }
+  "47": { en: "Switch", hi: "स्विच" }
+  "48": { en: "Tea", hi: "चाय" }
+  "49": { en: "Temple", hi: "मंदिर" }
+  "50": { en: "Thank you", hi: "धन्यवाद" }
+  "51": { en: "Tiger", hi: "बाघ" }
+  "52": { en: "Turtle", hi: "कछुआ" }
+  "53": { en: "Umbrella", hi: "छाता" }
+  "54": { en: "Uncle", hi: "चाचा" }
+  "55": { en: "Vegetables", hi: "सब्ज़ियाँ" }
+  "56": { en: "Volcano", hi: "ज्वालामुखी" }
+  "57": { en: "What is your Name", hi: "तुम्हारा नाम क्या है?" }
+  "58": { en: "Wife", hi: "पत्नी" }
+  "59": { en: "Writer", hi: "लेखक" }
+  "60": { en: "Wrong", hi: "गलत" }

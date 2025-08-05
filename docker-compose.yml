@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./BSWL_BACKEND
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - ML_SERVICE_URL=http://ml-service:8000
+      - MONGO_URI=mongodb://mongo:27017/bswl
+      - JWT_SECRET=your_jwt_secret_here
+      - PORT=3000
+    depends_on:
+      - mongo
+      - ml-service
+    volumes:
+      - ./BSWL_BACKEND/uploads:/app/uploads
+    networks:
+      - bswl-network
+    restart: unless-stopped
+
+  # ML Microservice
+  ml-service:
+    build:
+      context: ./BSWL_ML
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./BSWL_ML/models:/app/models
+      - ./BSWL_ML/checkpoints:/app/checkpoints
+      - ./BSWL_ML/logs:/app/logs
+    networks:
+      - bswl-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # MongoDB Database
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongo_data:/data/db
+      - ./BSWL_BACKEND/scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - bswl-network
+    restart: unless-stopped
+
+  # Redis (for caching and session management)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - bswl-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - ml-service
+    networks:
+      - bswl-network
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  redis_data:
+
+networks:
+  bswl-network:
+    driver: bridge 

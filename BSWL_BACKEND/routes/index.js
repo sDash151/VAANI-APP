@@ -4,6 +4,7 @@ import contentRoutes from './content.routes.js';
 import translationRoutes from './translation.routes.js';
 import userRoutes from './user.routes.js';
 import healthRoutes from './health.routes.js';
+import mlRoutes from './mlRoutes.js';
 import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
@@ -25,5 +26,6 @@ router.use('/auth', authRoutes);
 router.use('/content', contentRoutes);
 router.use('/translate', translationRoutes);
 router.use('/users', userRoutes);
+router.use('/ml', mlRoutes);
 
 export default router;

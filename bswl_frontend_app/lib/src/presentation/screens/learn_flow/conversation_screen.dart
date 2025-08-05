@@ -1,23 +1,26 @@
 // lib/src/presentation/screens/learn_flow/conversation_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
 import '../../widgets/video_lesson_card.dart';
 import '../../widgets/page_header.dart';
+import '../../widgets/advanced_video_player.dart';
+import '../../../services/video_asset_service.dart';
 
 class ConversationScreen extends StatelessWidget {
   const ConversationScreen({Key? key}) : super(key: key);
 
-  static final List<String> _lessonTitles = [
-    'Bank Conversation - Apply in Open Account',
-    'Polite & Impolite Sentences (Indian Sign Language)',
-    'Conversation (1) (Indian Sign Language)',
-    'Conversation 1 - Question and Answer (Part - 3) - Indian Sign Language',
-    'Conversation 1 - Question and Answer (Part - 1) - Indian Sign Language',
-    'Conversation 1 - Question and Answer (Part - 2) - Indian Sign Language',
-    'Conversation between Landlord and Tenant (Indian Sign Language)',
-    'Conversation 1 - Question and Answer (Part - 5) - Indian Sign Language',
-    'Impolite & polite sentences part- 2 (Indian Sign Language)',
+  static final List<String> lessons = [
+    'Basic Conversation',
+    'Question and Answer Part 1',
+    'Question and Answer Part 2',
+    'Question and Answer Part 3',
+    'Question and Answer Part 4',
+    'Question and Answer Part 5',
+    'Polite Sentences',
+    'Impolite Sentences',
+    'Bank Conversation',
+    'Landlord Tenant Conversation',
   ];
 
   @override
@@ -33,21 +36,67 @@ class ConversationScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PageHeader(
-                title: 'Conversation Lessons',
+                title: 'Conversation',
                 onBackPressed: () => Navigator.pop(context),
               ),
               const SizedBox(height: 18),
               Expanded(
                 child: ListView.builder(
-                  itemCount: _lessonTitles.length,
+                  itemCount: lessons.length,
                   itemBuilder: (context, index) {
+                    final lesson = lessons[index];
                     return VideoLessonCard(
-                      title: _lessonTitles[index],
+                      title: lesson,
                       subtitle: 'Tap to watch.',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          _cupertinoRoute(const _VideoPlayerPlaceholder()),
+                      onTap: () async {
+                        // Show loading indicator
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Loading video...'),
+                            duration: Duration(seconds: 1),
+                          ),
                         );
+
+                        final videoPath =
+                            await VideoAssetService.getFullVideoPath(lesson);
+
+                        if (videoPath != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoLessonScreen(
+                                title: 'Conversation: $lesson',
+                                videoUrl: videoPath,
+                                onVideoComplete: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('Great job learning $lesson!'),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                },
+                                onVideoError: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Error loading video. Please try again.'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('Video for $lesson is coming soon!'),
+                              backgroundColor: Colors.orange,
+                            ),
+                          );
+                        }
                       },
                     )
                         .animate()
@@ -64,51 +113,93 @@ class ConversationScreen extends StatelessWidget {
   }
 }
 
-// Helper for Cupertino-style page transition
-Route _cupertinoRoute(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.easeInOut;
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-    transitionDuration: const Duration(milliseconds: 350),
-  );
+class VideoLessonScreen extends StatefulWidget {
+  final String title;
+  final String videoUrl;
+  final VoidCallback? onVideoComplete;
+  final VoidCallback? onVideoError;
+
+  const VideoLessonScreen({
+    Key? key,
+    required this.title,
+    required this.videoUrl,
+    this.onVideoComplete,
+    this.onVideoError,
+  }) : super(key: key);
+
+  @override
+  State<VideoLessonScreen> createState() => _VideoLessonScreenState();
 }
 
-class _VideoPlayerPlaceholder extends StatelessWidget {
-  const _VideoPlayerPlaceholder({Key? key}) : super(key: key);
+class _VideoLessonScreenState extends State<VideoLessonScreen> {
+  bool _isFullscreen = false;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: colorScheme.background,
-      appBar: AppBar(
-        title: const Text('Video Player'),
-        backgroundColor: colorScheme.background,
-        elevation: 0,
-        iconTheme: theme.iconTheme,
-      ),
-      body: Center(
-        child: Container(
-          width: 220,
-          height: 140,
-          decoration: BoxDecoration(
-            color: colorScheme.primaryContainer.withOpacity(0.18),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Icon(Icons.play_circle_fill_rounded,
-              size: 60, color: colorScheme.primary),
-        ),
+      backgroundColor: Colors.black,
+      appBar: _isFullscreen
+          ? null
+          : AppBar(
+              title: Text(
+                widget.title,
+                style: TextStyle(
+                  color: colorScheme.onBackground,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              backgroundColor: colorScheme.background,
+              elevation: 0,
+              iconTheme: IconThemeData(
+                color: colorScheme.onBackground,
+              ),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                color: colorScheme.onBackground,
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+      body: AdvancedVideoPlayer(
+        videoUrl: widget.videoUrl,
+        title: widget.title,
+        autoPlay: false,
+        showControls: true,
+        enableFullscreen: true,
+        enableQualitySelection: true,
+        enablePlaybackSpeed: true,
+        enableSubtitles: false,
+        onVideoComplete: widget.onVideoComplete,
+        onVideoError: widget.onVideoError,
+        onFullscreenChanged: (isFullscreen) {
+          setState(() {
+            _isFullscreen = isFullscreen;
+          });
+        },
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Set system UI overlays for video player
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // Reset orientation to portrait when leaving the video screen
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    super.dispose();
   }
 }

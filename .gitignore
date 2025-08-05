@@ -1,32 +1,490 @@
-# Node
-node_modules/
+# ===========================================
+# COMPREHENSIVE GITIGNORE FOR BSWL PROJECT
+# ===========================================
+
+# ===========================================
+# ENVIRONMENT & SECRET FILES
+# ===========================================
 .env
-npm-debug.log
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+config.env
+secrets.json
+credentials.json
+service-account-key.json
+api-keys.txt
+secrets/
 
-# Python
-__pycache__/
-*.py[cod]
-*.pkl
-*.npy
-*.pt
-*.onnx
-
-# Flutter
-build/
-*.lock
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-
-# Git LFS big files
+# ===========================================
+# LARGE DATASETS & ASSETS
+# ===========================================
+# Video files
 *.mp4
 *.mov
 *.avi
 *.mkv
+*.wmv
+*.flv
+*.webm
+*.m4v
+*.3gp
 
-# OS junk
+# Image datasets
+ASSETS/images for phrases/
+ASSETS/Indian/
+ASSETS/ISL_Dataset/
+ASSETS/ISL_PROCESSED_VIDEO/
+ASSETS/ISL_PROCESSED_VIDEO_160/
+ASSETS/ISL_PROCESSED_VIDEO_SPLIT/
+ASSETS/ISLPHRASES_VIDEO/
+ASSETS/Video_Dataset/
+ASSETS/Video_Modules/
+ASSETS/Sample Videos/
+
+# Large PDF files
+*.pdf
+ASSETS/Indian-Sign-Language-230.pdf
+
+# ===========================================
+# MACHINE LEARNING FILES
+# ===========================================
+# Model files
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.pb
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.model
+*.weights
+
+# NumPy arrays
+*.npy
+*.npz
+
+# TensorFlow
+*.ckpt*
+*.meta
+*.index
+*.data-*
+
+# PyTorch
+*.pth
+*.pt
+
+# ML Checkpoints
+checkpoints/
+BSWL_ML/checkpoints/
+models/
+BSWL_ML/models/
+
+# ===========================================
+# PYTHON
+# ===========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+.env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# PyCharm
+.idea/
+
+# ===========================================
+# NODE.JS / BACKEND
+# ===========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# ===========================================
+# FLUTTER / FRONTEND
+# ===========================================
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.lock
+
+# Android related
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradle/
+**/android/key.properties
+*.jks
+
+# iOS/XCode related
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/DerivedData/
+**/ios/**/Icon?
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/**/profile
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Coverage
+coverage/
+
+# Exceptions to above rules.
+!**/ios/**/default.mode1v3
+!**/ios/**/default.mode2v3
+!**/ios/**/default.pbxuser
+!**/ios/**/default.perspectivev3
+!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# ===========================================
+# DATABASES
+# ===========================================
+# MongoDB
+mongo-data/
+*.db
+*.sqlite
+*.sqlite3
+
+# ===========================================
+# LOGS
+# ===========================================
+# Log files
+*.log
+logs/
+BSWL_BACKEND/logs/
+BSWL_ML/logs/
+BSWL_ML/app.log
+
+# TensorBoard
+logs/tensorboard/
+
+# ===========================================
+# UPLOADS & TEMPORARY FILES
+# ===========================================
+uploads/
+BSWL_BACKEND/uploads/
+temp/
+tmp/
+*.tmp
+*.temp
+
+# ===========================================
+# IDE & EDITOR FILES
+# ===========================================
+# VSCode
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ===========================================
+# OS GENERATED FILES
+# ===========================================
+# macOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Logs
-*.log
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================================
+# DOCKER & DEPLOYMENT
+# ===========================================
+.dockerignore
+docker-compose.override.yml
+*.dockerfile
+
+# ===========================================
+# TESTING
+# ===========================================
+# Test coverage
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+
+# Test results
+test-results/
+junit.xml
+test-report.xml
+
+# ===========================================
+# CUSTOM PROJECT SPECIFIC
+# ===========================================
+# Large documentation files (keep only essential ones)
+# Uncomment if you want to exclude large docs
+# *.md
+# !README.md
+# !INTEGRATION_README.md
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ===========================================
+# KEEP ESSENTIAL FILES
+# ===========================================
+# Keep ALL your project documentation files (exclude dependency .md files)
+!README.md
+!INTEGRATION_README.md
+!REALME_7_SETUP_GUIDE.md
+!ML_INTEGRATION_README.md
+!VIDEO_COMPONENTS_README.md
+!BSWL_*.md
+!VAANI_*.md
+
+# Add specific .md files to ensure they're tracked
+!BSWL_ACTIVITY_DIAGRAM.md
+!BSWL_COLLABORATION_DIAGRAM.md
+!BSWL_DATABASE_DESIGN.md
+!BSWL_SEQUENCE_DIAGRAM.md
+!BSWL_USE_CASE_DIAGRAM.md
+!VAANI_BSWL_LITERATURE_SURVEY.md
+!VAANI_BSWL_SOFTWARE_REQUIREMENT_SPECIFICATION.md
+!bswl_frontend_app/ML_INTEGRATION_README.md
+!bswl_frontend_app/VIDEO_COMPONENTS_README.md
+
+# Exclude dependency .md files from node_modules
+node_modules/**/*.md
+BSWL_BACKEND/node_modules/**/*.md
+bswl_frontend_app/node_modules/**/*.md
+
+# Keep configuration files for better project understanding
+!docker-compose.yml
+!Dockerfile
+!package.json
+!pubspec.yaml
+!requirements.txt
+!pubspec.lock
+!package-lock.json
+
+# Keep example and configuration files
+!env.example
+!*.example
+!*.config.js
+!*.config.json
+!*.config.yaml
+!*.config.yml
+
+# Keep deployment and infrastructure files
+!nginx/nginx.conf
+!BSWL_DEPLOYMENT/**/*.yml
+!BSWL_DEPLOYMENT/**/*.yaml
+!BSWL_DEPLOYMENT/**/*.json
+
+# Keep ML model configuration
+!BSWL_ML/app/config.yaml
+!BSWL_ML/requirements/*.txt
+
+# Keep Flutter configuration
+!bswl_frontend_app/analysis_options.yaml
+!bswl_frontend_app/devtools_options.yaml
+!bswl_frontend_app/.metadata
+
+# Keep backend configuration
+!BSWL_BACKEND/swagger.yaml
+!BSWL_BACKEND/healthcheck.js
+!BSWL_BACKEND/seedUser.js
+
+# Keep scripts and utilities
+!*.bat
+!*.sh
+!*.ps1
+!BSWL_BACKEND/scripts/*.js
+!BSWL_ML/scripts/*.py
+
+# Keep test files for understanding
+!test_*.py
+!*.test.js
+!*.test.ts
+!*.spec.js
+!*.spec.ts
+
+# Keep documentation and guides
+!REALME_7_SETUP_GUIDE.md
+!ML_INTEGRATION_README.md
+!VIDEO_COMPONENTS_README.md

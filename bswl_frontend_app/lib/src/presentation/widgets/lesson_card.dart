@@ -17,57 +17,73 @@ class LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(14),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.only(bottom: screenHeight * 0.012), // Responsive margin
+        padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         decoration: BoxDecoration(
           color: AppColors.cardLight,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Row(
           children: [
+            // Responsive icon container
             Container(
-              width: 50,
-              height: 50,
+              width: screenWidth * 0.12, // 12% of screen width
+              height: screenWidth * 0.12,
               decoration: BoxDecoration(
                 color: AppColors.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: AppColors.primary),
+              child: Icon(
+                icon, 
+                color: AppColors.primary,
+                size: screenWidth * 0.06, // Responsive icon size
+              ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: screenWidth * 0.04), // Responsive spacing
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: Theme.of(context).textTheme.bodyLarge),
-                  const SizedBox(height: 8),
+                  Text(
+                    title, 
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: screenWidth * 0.035, // Responsive font size
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: screenHeight * 0.006), // Responsive spacing
                   LinearProgressIndicator(
                     value: progress,
-                    minHeight: 6,
-                    borderRadius: BorderRadius.circular(3),
+                    minHeight: 4,
+                    borderRadius: BorderRadius.circular(2),
                     backgroundColor: Colors.grey[300],
                     color: AppColors.primary,
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: screenWidth * 0.03), // Responsive spacing
             Text(
               '${(progress * 100).toInt()}%',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppColors.primary,
+                    fontSize: screenWidth * 0.032, // Responsive font size
                   ),
             ),
           ],

@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 from pydantic import Field
 
 class AppConfig(BaseSettings):
-    model_path: str = Field("models/isl_model.pt", env="MODEL_PATH")
+    model_path: str = Field("models/isl_video_best.pt", env="MODEL_PATH")
     execution_provider: str = Field("CPUExecutionProvider", env="EXECUTION_PROVIDER")
     sequence_length: int = 30
     sequence_overlap: int = 5
@@ -15,10 +15,12 @@ class AppConfig(BaseSettings):
     label_mappings: dict = {}
     log_level: str = "INFO"
     gpu_threshold: float = 0.8
+    num_classes: int = 100  # Add missing property
 
     class Config:
         env_file = ".env"
         env_prefix = "ISL_"
+        protected_namespaces = ('settings_',)
 
     @classmethod
     def from_yaml(cls, config_path: str):

@@ -6,6 +6,7 @@ import 'package:bswl_frontend_app/src/domain/entities/user.dart';
 import 'package:bswl_frontend_app/src/domain/repositories/i_auth_repository.dart';
 import 'package:bswl_frontend_app/src/utils/helpers.dart';
 import 'package:bswl_frontend_app/services/api_service.dart';
+import 'package:bswl_frontend_app/config/app_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Implementation of [IAuthRepository] using Firebase Authentication
@@ -14,7 +15,9 @@ class AuthRepository implements IAuthRepository {
   final fb_auth.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
   final ApiService apiService = ApiService(
-      baseUrl: 'http://localhost:3000/api'); // Update to your backend URL
+    baseUrl: AppConfig.apiBaseUrl,
+    mlServiceUrl: AppConfig.mlServiceUrl,
+  );
 
   AuthRepository({
     fb_auth.FirebaseAuth? firebaseAuth,

@@ -15,63 +15,87 @@ class AppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return ClipPath(
-      clipper: _HeaderCurveClipper(curveHeight: 32),
+      clipper: _HeaderCurveClipper(
+          curveHeight: screenHeight * 0.02), // Responsive curve
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.05, // 5% of screen width
+          vertical: screenHeight * 0.025, // 2.5% of screen height
+        ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.primary.withOpacity(0.9), AppColors.primaryLight],
+            colors: [
+              AppColors.primary.withOpacity(0.9),
+              AppColors.primaryLight
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Title with fade + slide animation
-            Text(
-              title,
-              style: TextStyles.textTheme.displayMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                shadows: [
-                  Shadow(
-                    blurRadius: 6,
-                    color: Colors.black26,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-            ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.2),
+            // Title with responsive font size
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      FontWeight.w900, // Extra bold for better visibility
+                  fontSize: screenWidth * 0.055, // Larger font size
+                  shadows: [
+                    Shadow(
+                      blurRadius: 8,
+                      color: Colors.black.withOpacity(0.5),
+                      offset: const Offset(0, 2),
+                    ),
+                    Shadow(
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.7),
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.2),
+            ),
 
-            // Profile Avatar with border and shadow
-            if (profileImageUrl != null)
+            // Profile Avatar with responsive size
+            if (profileImageUrl != null) ...[
+              SizedBox(width: screenWidth * 0.03), // Responsive spacing
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.8), width: 2),
+                  border: Border.all(
+                      color: Colors.white.withOpacity(0.8), width: 2),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black26,
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
                     ),
                   ],
                 ),
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(profileImageUrl!),
-                  radius: 26,
+                  radius: screenWidth * 0.06, // Responsive radius
                   backgroundColor: Colors.white.withOpacity(0.3),
                 ),
               ).animate().fadeIn(duration: 1000.ms).slideX(begin: 0.2),
+            ],
           ],
         ),
       ),
@@ -125,29 +149,38 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: TextStyles.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyles.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                    fontSize: screenWidth * 0.04, // Responsive font size
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               if (actionText != null)
                 TextButton(
                   onPressed: onActionPressed,
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.04,
+                      vertical: 6,
+                    ),
                     backgroundColor: AppColors.primary.withOpacity(0.1),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -157,20 +190,21 @@ class SectionHeader extends StatelessWidget {
                     style: TextStyles.textTheme.bodyMedium?.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w600,
+                      fontSize: screenWidth * 0.035, // Responsive font size
                     ),
                   ),
                 ),
             ],
           ),
           if (showDivider) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Divider(
               height: 1,
               thickness: 1,
               color: Colors.grey[300],
             ),
           ],
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
         ],
       ),
     );

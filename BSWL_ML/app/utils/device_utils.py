@@ -1,10 +1,19 @@
 import torch
-import onnxruntime as ort
+
+# Import onnxruntime only when needed
+try:
+    import onnxruntime as ort
+    ONNX_AVAILABLE = True
+except ImportError:
+    ONNX_AVAILABLE = False
 
 def get_device():
     return "cuda" if torch.cuda.is_available() else "cpu"
 
 def get_execution_provider(device_preference="auto"):
+    if not ONNX_AVAILABLE:
+        return "CPUExecutionProvider"
+    
     if device_preference == "auto":
         if ort.get_device() == "GPU" and torch.cuda.is_available():
             return "CUDAExecutionProvider"

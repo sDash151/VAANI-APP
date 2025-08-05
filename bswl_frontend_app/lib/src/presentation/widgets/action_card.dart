@@ -17,18 +17,21 @@ class ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         decoration: BoxDecoration(
           color: AppColors.cardLight,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -37,16 +40,18 @@ class ActionCard extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 40,
+              size: screenWidth * 0.08, // Responsive icon size
               color: color,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: screenHeight * 0.012), // Responsive spacing
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
+                    fontSize: screenWidth * 0.035, // Responsive font size
                   ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

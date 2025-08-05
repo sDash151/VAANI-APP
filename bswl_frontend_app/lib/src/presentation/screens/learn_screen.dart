@@ -15,6 +15,9 @@ class LearnScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     final subjects = [
       {'name': 'Elementary', 'icon': Icons.school},
       {'name': 'Intermediate', 'icon': Icons.auto_stories},
@@ -46,7 +49,7 @@ class LearnScreen extends StatelessWidget {
               // 👤 Animated Wave Header
               const LearnHeader(profileImageUrl: null),
 
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.015),
 
               // 📚 Title with Animation
               Animate(
@@ -55,11 +58,11 @@ class LearnScreen extends StatelessWidget {
                   SlideEffect(duration: 500.ms)
                 ],
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                   child: Text(
                     'Subjects',
                     style: GoogleFonts.montserrat(
-                      fontSize: 34,
+                      fontSize: screenWidth * 0.08, // Responsive font size
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.2,
                       color: AppColors.primary,
@@ -76,20 +79,20 @@ class LearnScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.015),
 
               // 🔢 Subject Grid with Animation
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                   child: GridView.builder(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 1.1,
+                      crossAxisSpacing: screenWidth * 0.04,
+                      mainAxisSpacing: screenHeight * 0.015,
+                      childAspectRatio:
+                          1.2, // Increased aspect ratio to prevent overflow
                     ),
                     itemCount: subjects.length,
                     itemBuilder: (context, index) {
@@ -210,6 +213,8 @@ class _SubjectCardState extends State<SubjectCard> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
 
     return GestureDetector(
@@ -222,7 +227,7 @@ class _SubjectCardState extends State<SubjectCard> {
         duration: const Duration(milliseconds: 120),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
               colors: [
                 Colors.white.withOpacity(0.9),
@@ -241,12 +246,15 @@ class _SubjectCardState extends State<SubjectCard> {
             ],
             border: Border.all(color: Colors.grey.shade200, width: 1),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.03,
+            vertical: screenHeight * 0.015,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(screenWidth * 0.03),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
@@ -260,21 +268,25 @@ class _SubjectCardState extends State<SubjectCard> {
                 ),
                 child: Icon(
                   widget.icon,
-                  size: 36,
+                  size: screenWidth * 0.08, // Responsive icon size
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 18),
-              Text(
-                widget.subjectName,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontFamily: 'Poppins',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
-                  color: AppColors.textPrimary,
+              SizedBox(height: screenHeight * 0.012),
+              Flexible(
+                child: Text(
+                  widget.subjectName,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontFamily: 'Poppins',
+                    fontSize: screenWidth * 0.04, // Responsive font size
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                    color: AppColors.textPrimary,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 ),
-                textAlign: TextAlign.center,
               ),
             ],
           ),

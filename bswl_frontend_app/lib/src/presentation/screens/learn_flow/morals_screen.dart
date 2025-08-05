@@ -1,29 +1,34 @@
 // lib/src/presentation/screens/learn_flow/morals_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
 import '../../widgets/video_lesson_card.dart';
 import '../../widgets/page_header.dart';
+import '../../widgets/advanced_video_player.dart';
+import '../../../services/video_asset_service.dart';
 
 class MoralsScreen extends StatelessWidget {
   const MoralsScreen({Key? key}) : super(key: key);
 
-  static final List<String> _moralTitles = [
-    'The Honest Woodcutter (Indian Sign Language)',
-    'The Lion and the Mouse (Indian Sign Language)',
-    'The Boy Who Cried Wolf (Indian Sign Language)',
-    'The Wind and the Sun (Indian Sign Language)',
-    'The Tortoise and the Hare (Indian Sign Language)',
-    "The Peacock's Complaint (Indian Sign Language)",
-    'King Midas and the golden touch (Indian Sign Language)',
-    'The milkmaid and her pail (Indian Sign Language)',
-    'The Ant and the Grasshopper (Indian Sign Language)',
-    'Belling the Cat (Indian Sign Language)',
-    'The Dog and His Reflection (Indian Sign Language)',
-    'The Ass in the Lion\'s Skin (Indian Sign Language)',
-    'The Sour Grapes (Indian Sign Language)',
-    'The Bundle of Sticks (Indian Sign Language)',
-    'The Bear and the Two Travellers (Indian Sign Language)',
+  static final List<String> lessons = [
+    'The Honest Woodcutter',
+    'The Lion and the Mouse',
+    'The Boy Who Cried Wolf',
+    'The Wind and the Sun',
+    'The Tortoise and the Hare',
+    'The Peacock\'s Complaint',
+    'King Midas and the golden touch',
+    'The milkmaid and her pail',
+    'The Ant and the Grasshopper',
+    'Belling the Cat',
+    'The Dog and His Reflection',
+    'The Ass in the Lion\'s Skin',
+    'The Sour Grapes',
+    'The Bundle of Sticks',
+    'The Bear and the Two Travellers',
+    'The Four Oxen and The Lion',
+    'The Goose That Laid the Golden Egg',
+    'The Town Mouse and the Country Mouse',
   ];
 
   @override
@@ -40,7 +45,7 @@ class MoralsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PageHeader(
-                title: 'Moral Stories',
+                title: 'Morals',
                 onBackPressed: () => Navigator.pop(context),
               ),
               const SizedBox(height: 18),
@@ -54,16 +59,64 @@ class MoralsScreen extends StatelessWidget {
                           mainAxisSpacing: 18,
                           childAspectRatio: 1.9,
                         ),
-                        itemCount: _moralTitles.length,
+                        itemCount: lessons.length,
                         itemBuilder: (context, index) {
+                          final lesson = lessons[index];
                           return VideoLessonCard(
-                            title: _moralTitles[index],
+                            title: lesson,
                             subtitle: 'Tap to watch.',
-                            onTap: () {
-                              Navigator.of(context).push(
-                                _cupertinoRoute(
-                                    const _VideoPlayerPlaceholder()),
+                            onTap: () async {
+                              // Show loading indicator
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Loading video...'),
+                                  duration: Duration(seconds: 1),
+                                ),
                               );
+
+                              final videoPath =
+                                  await VideoAssetService.getFullVideoPath(
+                                      lesson);
+
+                              if (videoPath != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VideoLessonScreen(
+                                      title: 'Morals: $lesson',
+                                      videoUrl: videoPath,
+                                      onVideoComplete: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Great job learning $lesson!'),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                      },
+                                      onVideoError: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Error loading video. Please try again.'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Video for $lesson is coming soon!'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                              }
                             },
                           )
                               .animate()
@@ -72,16 +125,64 @@ class MoralsScreen extends StatelessWidget {
                         },
                       )
                     : ListView.builder(
-                        itemCount: _moralTitles.length,
+                        itemCount: lessons.length,
                         itemBuilder: (context, index) {
+                          final lesson = lessons[index];
                           return VideoLessonCard(
-                            title: _moralTitles[index],
+                            title: lesson,
                             subtitle: 'Tap to watch.',
-                            onTap: () {
-                              Navigator.of(context).push(
-                                _cupertinoRoute(
-                                    const _VideoPlayerPlaceholder()),
+                            onTap: () async {
+                              // Show loading indicator
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Loading video...'),
+                                  duration: Duration(seconds: 1),
+                                ),
                               );
+
+                              final videoPath =
+                                  await VideoAssetService.getFullVideoPath(
+                                      lesson);
+
+                              if (videoPath != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VideoLessonScreen(
+                                      title: 'Morals: $lesson',
+                                      videoUrl: videoPath,
+                                      onVideoComplete: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Great job learning $lesson!'),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                      },
+                                      onVideoError: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Error loading video. Please try again.'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Video for $lesson is coming soon!'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                              }
                             },
                           )
                               .animate()
@@ -98,51 +199,93 @@ class MoralsScreen extends StatelessWidget {
   }
 }
 
-// Helper for Cupertino-style page transition
-Route _cupertinoRoute(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.easeInOut;
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-    transitionDuration: const Duration(milliseconds: 350),
-  );
+class VideoLessonScreen extends StatefulWidget {
+  final String title;
+  final String videoUrl;
+  final VoidCallback? onVideoComplete;
+  final VoidCallback? onVideoError;
+
+  const VideoLessonScreen({
+    Key? key,
+    required this.title,
+    required this.videoUrl,
+    this.onVideoComplete,
+    this.onVideoError,
+  }) : super(key: key);
+
+  @override
+  State<VideoLessonScreen> createState() => _VideoLessonScreenState();
 }
 
-class _VideoPlayerPlaceholder extends StatelessWidget {
-  const _VideoPlayerPlaceholder({Key? key}) : super(key: key);
+class _VideoLessonScreenState extends State<VideoLessonScreen> {
+  bool _isFullscreen = false;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: colorScheme.background,
-      appBar: AppBar(
-        title: const Text('Video Player'),
-        backgroundColor: colorScheme.background,
-        elevation: 0,
-        iconTheme: theme.iconTheme,
-      ),
-      body: Center(
-        child: Container(
-          width: 220,
-          height: 140,
-          decoration: BoxDecoration(
-            color: colorScheme.primaryContainer.withOpacity(0.18),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Icon(Icons.play_circle_fill_rounded,
-              size: 60, color: colorScheme.primary),
-        ),
+      backgroundColor: Colors.black,
+      appBar: _isFullscreen
+          ? null
+          : AppBar(
+              title: Text(
+                widget.title,
+                style: TextStyle(
+                  color: colorScheme.onBackground,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              backgroundColor: colorScheme.background,
+              elevation: 0,
+              iconTheme: IconThemeData(
+                color: colorScheme.onBackground,
+              ),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                color: colorScheme.onBackground,
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+      body: AdvancedVideoPlayer(
+        videoUrl: widget.videoUrl,
+        title: widget.title,
+        autoPlay: false,
+        showControls: true,
+        enableFullscreen: true,
+        enableQualitySelection: true,
+        enablePlaybackSpeed: true,
+        enableSubtitles: false,
+        onVideoComplete: widget.onVideoComplete,
+        onVideoError: widget.onVideoError,
+        onFullscreenChanged: (isFullscreen) {
+          setState(() {
+            _isFullscreen = isFullscreen;
+          });
+        },
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Set system UI overlays for video player
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // Reset orientation to portrait when leaving the video screen
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    super.dispose();
   }
 }

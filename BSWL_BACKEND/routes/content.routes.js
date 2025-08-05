@@ -4,7 +4,7 @@ import {
   getContent, 
   updateContent, 
   deleteContent,
-  uploadVideo
+  uploadContentVideo
 } from '../controllers/content.controller.js';
 import { validate, contentSchemas } from '../middlewares/validation.middleware.js';
 import { authenticate, authorize } from '../middlewares/auth.middleware.js';
@@ -20,6 +20,6 @@ router.post('/', validate(contentSchemas.createContent), createContent);
 router.get('/', getContent);
 router.put('/:id', updateContent);
 router.delete('/:id', deleteContent);
-router.post('/:contentId/upload-video', upload.single('video'), uploadVideo);
+router.post('/:contentId/upload-video', upload.single('video'), uploadContentVideo);
 
 export default router;

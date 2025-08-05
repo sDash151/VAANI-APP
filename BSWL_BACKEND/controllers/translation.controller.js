@@ -41,9 +41,36 @@ export const textToSign = asyncHandler(async (req, res) => {
 
 export const translateTextRoute = asyncHandler(async (req, res) => {
   const { text, sourceLang, targetLang } = req.body;
+  
+  console.log('Translation request:', { text, sourceLang, targetLang });
+  
   if (!text || !sourceLang || !targetLang) {
-    throw new httpErrors.BadRequest('Missing required parameters');
+    throw new httpErrors.BadRequest('Missing required parameters: text, sourceLang, targetLang');
   }
-  const translation = await translateText(text, targetLang);
-  res.json({ translation });
+  
+  try {
+    let translation;
+    let service = 'Fallback';
+    
+    // Use enhanced fallback translation system (free and reliable)
+    translation = await translateText(text, targetLang, sourceLang);
+    service = 'Enhanced Fallback';
+    
+    console.log('Translation successful:', translation);
+    res.json({ 
+      success: true,
+      translation,
+      originalText: text,
+      sourceLanguage: sourceLang,
+      targetLanguage: targetLang,
+      service: service
+    });
+  } catch (error) {
+    console.error('Translation failed:', error);
+    res.status(500).json({ 
+      success: false,
+      error: error.message,
+      originalText: text
+    });
+  }
 });

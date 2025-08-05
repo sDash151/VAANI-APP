@@ -77,6 +77,9 @@ class AdvancedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -91,8 +94,10 @@ class AdvancedScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.04,
+              vertical: screenHeight * 0.01,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -100,16 +105,19 @@ class AdvancedScreen extends StatelessWidget {
                   title: 'Advanced Topics',
                   onBackPressed: () => Navigator.pop(context),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: screenHeight * 0.015),
                 Expanded(
                   child: GridView.builder(
-                    padding: const EdgeInsets.only(bottom: 12, top: 4),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    padding: EdgeInsets.only(
+                      bottom: screenHeight * 0.02,
+                      top: screenHeight * 0.005,
+                    ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.85,
+                      crossAxisSpacing: screenWidth * 0.04,
+                      mainAxisSpacing: screenHeight * 0.015,
+                      childAspectRatio:
+                          1.1, // Increased aspect ratio to prevent overflow
                     ),
                     itemCount: topics.length,
                     itemBuilder: (context, index) {

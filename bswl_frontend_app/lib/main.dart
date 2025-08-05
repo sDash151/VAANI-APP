@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:bswl_frontend_app/src/utils/network_config.dart';
 // import 'package:flutter/rendering.dart';
 
 import 'package:provider/provider.dart';
@@ -14,13 +15,18 @@ import 'package:bswl_frontend_app/src/presentation/screens/auth/forgot_password.
 import 'package:bswl_frontend_app/src/presentation/screens/auth/reset_password_screen.dart';
 import 'package:bswl_frontend_app/src/presentation/screens/profile/edit_profile_screen.dart';
 import 'package:bswl_frontend_app/src/presentation/screens/profile/change_password_screen.dart';
-import 'package:bswl_frontend_app/utils/backend_test.dart';
+import 'package:bswl_frontend_app/services/service_provider.dart';
+import 'package:bswl_frontend_app/src/screens/ml_integration_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // ENSURE Flutter is ready
-  await dotenv.load(fileName: ".env");
+
+  // Configure network for debug mode
+  NetworkConfig.configureForDebug();
+
+  await dotenv.load(fileName: ".env"); // Re-enabled - .env file exists
   await Firebase.initializeApp(); // ✅ Initialize Firebase
-  await testBackendConnection(); // TEMP: Test backend connection at startup
+
   runApp(
     MultiProvider(
       providers: [
@@ -28,6 +34,7 @@ void main() async {
           create: (context) =>
               AuthProvider(AuthRepository())..loadCurrentUser(),
         ),
+        ...ServiceProviderSetup.getProviders(),
       ],
       child: const MyApp(),
     ),
@@ -51,6 +58,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUpScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/home': (context) => const HomeScreen(),
+        '/ml-integration': (context) => const MLIntegrationScreen(),
         '/reset-password': (context) {
           final args = ModalRoute.of(context)?.settings.arguments
               as Map<String, dynamic>?;

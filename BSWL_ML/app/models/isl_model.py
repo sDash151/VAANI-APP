@@ -4,6 +4,16 @@ import torch.nn.functional as F
 import math
 
 
+class ISLModel(nn.Module):
+    """Main ISL model class that wraps the transformer"""
+    def __init__(self, input_dim, num_classes, d_model=256, nhead=8, num_layers=3, dim_feedforward=512, dropout=0.1):
+        super().__init__()
+        self.transformer = SignLanguageTransformer(input_dim, num_classes, d_model, nhead, num_layers, dim_feedforward, dropout)
+    
+    def forward(self, x):
+        return self.transformer(x)
+
+
 class SignLanguageTransformer(nn.Module):
     def __init__(self, input_dim, num_classes, d_model=256, nhead=8, num_layers=3, dim_feedforward=512, dropout=0.1):
         super().__init__()

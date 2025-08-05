@@ -1,8 +1,9 @@
 import Content from '../models/content.model.js';
 import httpErrors from 'http-errors';
 import asyncHandler from 'express-async-handler';
-import { bucket } from '../config/firebase.js';
+import { uploadVideo, deleteFile } from '../config/cloudinary.js';
 import { v4 as uuidv4 } from 'uuid';
+import logger from '../utils/logger.js';
 
 // Optionally, you can restrict content creation to authenticated users (req.user)
 export const createContent = asyncHandler(async (req, res) => {
@@ -19,27 +20,36 @@ export const createContent = asyncHandler(async (req, res) => {
   res.status(201).json(content);
 });
 
-export const uploadVideo = asyncHandler(async (req, res) => {
+export const uploadContentVideo = asyncHandler(async (req, res) => {
   if (!req.file) {
     throw new httpErrors.BadRequest('No video file uploaded');
   }
+  
   const { contentId } = req.params;
   const content = await Content.findById(contentId);
   if (!content) {
     throw new httpErrors.NotFound('Content not found');
   }
-  // Optionally, check if req.user.uid === content.createdBy for ownership
-  const fileName = `videos/${uuidv4()}-${req.file.originalname}`;
-  const file = bucket.file(fileName);
-  await file.save(req.file.buffer, {
-    metadata: {
-      contentType: req.file.mimetype
-    }
-  });
-  await file.makePublic();
-  content.hindiSignVideo = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-  await content.save();
-  res.json({ videoUrl: content.hindiSignVideo });
+  
+  try {
+    // Upload video to Cloudinary
+    const uploadResult = await uploadVideo(req.file, 'bswl/content-videos');
+    
+    // Update content with video URL
+    content.hindiSignVideo = uploadResult.url;
+    content.videoPublicId = uploadResult.public_id; // Store for future deletion
+    await content.save();
+    
+    res.json({ 
+      videoUrl: content.hindiSignVideo,
+      publicId: uploadResult.public_id,
+      size: uploadResult.size,
+      duration: uploadResult.duration
+    });
+  } catch (error) {
+    logger.error('Video upload failed:', error);
+    throw new httpErrors.InternalServerError('Failed to upload video');
+  }
 });
 
 export const getContent = asyncHandler(async (req, res) => {
@@ -67,16 +77,17 @@ export const deleteContent = asyncHandler(async (req, res) => {
   if (!content) {
     throw new httpErrors.NotFound('Content not found');
   }
-  // Delete associated video if exists
-  if (content.hindiSignVideo) {
-    const url = new URL(content.hindiSignVideo);
-    const fileName = decodeURIComponent(url.pathname.split('/').pop());
-    const file = bucket.file(fileName);
+  
+  // Delete associated video from Cloudinary if exists
+  if (content.videoPublicId) {
     try {
-      await file.delete();
+      await deleteFile(content.videoPublicId);
+      logger.info(`Video deleted from Cloudinary: ${content.videoPublicId}`);
     } catch (error) {
-      console.error('Failed to delete video:', error);
+      logger.error('Failed to delete video from Cloudinary:', error);
+      // Don't fail the request if video deletion fails
     }
   }
+  
   res.status(204).send();
 });

@@ -18,6 +18,9 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     // Sample data - replace with actual API data
     final List<Map<String, dynamic>> modules = [
       {
@@ -45,7 +48,7 @@ class CategoryScreen extends StatelessWidget {
       backgroundColor: colorScheme.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(screenWidth * 0.06),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -53,15 +56,16 @@ class CategoryScreen extends StatelessWidget {
                 title: '$subjectName - $category',
                 onBackPressed: () => Navigator.pop(context),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: screenHeight * 0.02),
               Expanded(
                 child: GridView.builder(
                   itemCount: modules.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1,
+                    crossAxisSpacing: screenWidth * 0.04,
+                    mainAxisSpacing: screenHeight * 0.015,
+                    childAspectRatio:
+                        0.9, // Adjusted aspect ratio to prevent overflow
                   ),
                   itemBuilder: (context, index) {
                     return Animate(
@@ -128,13 +132,16 @@ class _ModuleGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withOpacity(0.08),
@@ -143,40 +150,43 @@ class _ModuleGridItem extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(screenWidth * 0.04),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: screenWidth * 0.12,
+                height: screenWidth * 0.12,
                 decoration: BoxDecoration(
                   color: colorScheme.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(Icons.play_circle_fill,
-                    color: colorScheme.onPrimary, size: 32),
+                    color: colorScheme.onPrimary, size: screenWidth * 0.08),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: screenWidth * 0.03),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: screenWidth * 0.035,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: screenHeight * 0.005),
                     Text(
                       description,
                       style: textTheme.bodyMedium?.copyWith(
-                          color:
-                              colorScheme.onPrimaryContainer.withOpacity(0.7)),
+                        color: colorScheme.onPrimaryContainer.withOpacity(0.7),
+                        fontSize: screenWidth * 0.032,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -192,23 +202,35 @@ class _ModuleGridItem extends StatelessWidget {
                 backgroundColor: colorScheme.secondaryContainer,
                 label: Text(
                   duration,
-                  style: textTheme.labelMedium
-                      ?.copyWith(color: colorScheme.onSecondaryContainer),
+                  style: textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSecondaryContainer,
+                    fontSize: screenWidth * 0.03,
+                  ),
                 ),
               ),
               const Spacer(),
               IconButton(
-                icon: Icon(Icons.play_circle_fill, color: colorScheme.primary),
+                icon: Icon(
+                  Icons.play_circle_fill,
+                  color: colorScheme.primary,
+                  size: screenWidth * 0.06,
+                ),
                 onPressed: onLessonTap,
                 tooltip: 'Start Lesson',
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: screenWidth * 0.02),
               TextButton.icon(
-                icon: Icon(Icons.quiz, color: colorScheme.secondary),
+                icon: Icon(
+                  Icons.quiz,
+                  color: colorScheme.secondary,
+                  size: screenWidth * 0.05,
+                ),
                 label: Text(
                   "Quiz",
-                  style: textTheme.labelLarge
-                      ?.copyWith(color: colorScheme.secondary),
+                  style: textTheme.labelLarge?.copyWith(
+                    color: colorScheme.secondary,
+                    fontSize: screenWidth * 0.032,
+                  ),
                 ),
                 onPressed: onQuizTap,
               ),
