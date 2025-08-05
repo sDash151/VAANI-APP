@@ -178,9 +178,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 For support and questions:
-- 📧 Email: [your-email@domain.com]
-- 🐛 Issues: [GitHub Issues](https://github.com/your-repo/issues)
-- 📖 Documentation: [Wiki](https://github.com/your-repo/wiki)
+- 📧 Email: [souravdilu78090@gmail.com]
+- 🐛 Issues: [GitHub Issues](https://github.com/sDash151/VAANI-APP/issues)
+- 📖 Documentation: [Wiki](https://github.com/sDash151/VAANI-APP/wiki)
 
 ---
 
